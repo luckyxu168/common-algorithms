@@ -1,3 +1,4 @@
+#获取第一页的html之后解析出第一页主图片的地址、图库的标题、总页数，然后创建存放图片的文件夹，使用循环下载图片并保存到文件夹中
 from bs4 import BeautifulSoup
 import requests as r
 import os
