@@ -10,7 +10,6 @@ url = input('请输入第一页的网址：')
 #获取第一页的数据
 res = r.get(url=url,headers=headers)
 page_text = res.text
-# fp = open('1.html','r',encoding='utf-8')
 soup = BeautifulSoup(page_text,'lxml')
 #创建文件夹，下载第一页的主图片并保存到文件夹中
 page1 = str(soup.find('img',class_='blur'))
@@ -27,7 +26,13 @@ with open(img_path,'wb') as fp:
 pagenumber_moban = r'<span>\d\d</span>'
 Pattern = re.compile(pagenumber_moban)
 match = re.search(Pattern,str(soup))
-pagenumbers = int(match.group()[6:8])
+if match:
+    pagenumbers = int(match.group()[6:8])
+else:
+    pagenumber_moban = r'<span>\d\d\d</span>'
+    Pattern = re.compile(pagenumber_moban)
+    match = re.search(Pattern,str(soup))
+    pagenumbers = int(match.group()[6:9])
 #下载其余的图片
 for p in range(2,pagenumbers+1):
     url_later = url+'/'+str(p)
