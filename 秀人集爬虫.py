@@ -1,4 +1,4 @@
-#https://www.xiurenji.cc/
+#网址为：https://www.xiurenji.cc/
 from bs4 import BeautifulSoup
 import requests as r
 import os
@@ -15,10 +15,6 @@ UserAgent = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.111 YaBrowser/21.2.1.107 Yowser/2.5 Safari/537.36",
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; The World)"]
 headers = {"User-Agent": choice(UserAgent)}
-
-
-def update_header(referer):
-    headers['Referer'] = '{}'.format(referer)
 
 
 def xiurenji_download_single(url):
@@ -41,6 +37,7 @@ def xiurenji_download_single(url):
     image_url_base = 'https://www.xiurenji.cc'
     kwd = os.getcwd()
     s_d = l[0].get("alt")
+    # 创建文件夹
     if not os.path.exists(kwd + '\\' + s_d):
         os.mkdir(kwd + '\\' + s_d)
     else:
@@ -51,7 +48,7 @@ def xiurenji_download_single(url):
     for i in l:
         image_url = image_url_base + i.get("src")
         image_url_list.append(image_url)
-    # update_header(url)
+    # 下载第1页里面的图片
     for i in range(len(image_url_list)):
         print("正在下载第{}张图片......".format(i + 1))
         img_data = r.get(url=image_url_list[i], headers=headers).content
@@ -59,6 +56,7 @@ def xiurenji_download_single(url):
         with open(img_path, 'wb') as fp:
             fp.write(img_data)
         repeat_time = 0
+        # 判断此图片是否完整，不是完整的就删除重新下载，如果重新下载的次数超过5次，则退出程序
         while os.path.getsize(img_path) == 315:
             os.remove(img_path)
             img_data = r.get(url=image_url_list[i], headers=headers).content
@@ -70,6 +68,7 @@ def xiurenji_download_single(url):
                 sys.exit('第{}张图片下载失败，程序退出！'.format(i + 1))
         picture_numbers += 1
         print("第{}张图片下载完成!".format(i + 1))
+    # 下载后面网页里面的图片
     for p in range(1, pagenumbers):
         url_later = url[:-5] + "_" + str(p) + ".html"
         page_source_text = r.get(url=url_later, headers=headers)
@@ -80,7 +79,6 @@ def xiurenji_download_single(url):
         for i in l:
             image_url = image_url_base + i.get("src")
             image_url_list.append(image_url)
-        # update_header(url_later)
         for i in range(len(image_url_list)):
             print("正在下载第{}张图片......".format(picture_numbers + 1))
             img_data = r.get(url=image_url_list[i], headers=headers).content
@@ -99,6 +97,7 @@ def xiurenji_download_single(url):
                     sys.exit('第{}张图片下载失败，程序退出！'.format(i + 1))
             print("第{}张图片下载完成!".format(picture_numbers + 1))
             picture_numbers += 1
+    # 判断下载图片的数量是否与真实的图片数量一致
     if picture_numbers_real == picture_numbers:
         print("全部{}张图片下载完成!".format(picture_numbers))
 
