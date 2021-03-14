@@ -94,7 +94,7 @@ def xiurenji_download_single(url):
                     fp.write(img_data)
                 repeat_time += 1
                 if repeat_time > 5:
-                    sys.exit('第{}张图片下载失败，程序退出！'.format(i + 1))
+                    sys.exit('第{}张图片下载失败，程序退出！'.format(picture_numbers + 1))
             print("第{}张图片下载完成!".format(picture_numbers + 1))
             picture_numbers += 1
     # 判断下载图片的数量是否与真实的图片数量一致
