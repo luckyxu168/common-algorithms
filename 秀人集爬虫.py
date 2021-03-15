@@ -46,7 +46,10 @@ def xiurenji_download_single(url):
         shutil.rmtree(kwd + '\\' + s_d)
         os.mkdir(kwd + '\\' + s_d)
     picture_numbers = 0
-    picture_numbers_real = int(s_d[-3:-1])
+    if pagenumbers < 34:
+        picture_numbers_real = int(s_d[-3:-1])
+    else:
+        picture_numbers_real = int(s_d[-4:-1])
     print("共有{}张图片".format(picture_numbers_real))
     for i in l:
         image_url = image_url_base + i.get("src")
