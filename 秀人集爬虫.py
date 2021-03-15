@@ -1,4 +1,4 @@
-#网址为：https://www.xiurenji.cc/
+# 网址为：https://www.xiurenji.cc/
 from bs4 import BeautifulSoup
 import requests as r
 import os
@@ -6,6 +6,7 @@ import re
 from random import choice
 import shutil
 import sys
+from time import time
 
 UserAgent = [
     "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36",
@@ -37,6 +38,7 @@ def xiurenji_download_single(url):
     image_url_base = 'https://www.xiurenji.cc'
     kwd = os.getcwd()
     s_d = l[0].get("alt")
+    print("正在下载套图：{}".format(s_d))
     # 创建文件夹
     if not os.path.exists(kwd + '\\' + s_d):
         os.mkdir(kwd + '\\' + s_d)
@@ -45,6 +47,7 @@ def xiurenji_download_single(url):
         os.mkdir(kwd + '\\' + s_d)
     picture_numbers = 0
     picture_numbers_real = int(s_d[-3:-1])
+    print("共有{}张图片".format(picture_numbers_real))
     for i in l:
         image_url = image_url_base + i.get("src")
         image_url_list.append(image_url)
@@ -100,8 +103,13 @@ def xiurenji_download_single(url):
     # 判断下载图片的数量是否与真实的图片数量一致
     if picture_numbers_real == picture_numbers:
         print("全部{}张图片下载完成!".format(picture_numbers))
+    return picture_numbers
 
 
 if __name__ == '__main__':
     url_input = input('请输入第一页的网址：')
-    xiurenji_download_single(url_input)
+    start_time = time()
+    numbers = xiurenji_download_single(url_input)
+    end_time = time()
+    run_time = end_time - start_time
+    print("用时{}分{}秒，每张图片平均下载时间为{}秒".format(int(run_time / 60), int(run_time % 60), round(run_time / numbers, 2)))
