@@ -17,9 +17,11 @@ UserAgent = [
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; The World)"]
 headers = {"User-Agent": choice(UserAgent)}
 
+
 def modify_dictionary_name(s):
     start_index = s.find("[")
     return s[start_index:]
+
 
 def xiurenji_download_single(url):
     page_source_text = r.get(url=url, headers=headers)
@@ -84,7 +86,7 @@ def xiurenji_download_single(url):
             if repeat_time > 5:
                 sys.exit('第{}张图片下载失败，程序退出！'.format(i + 1))
         picture_numbers += 1
-        print("第{}张图片下载完成!".format(i + 1))
+        print("第{}张图片下载完成！".format(i + 1))
     # 下载后面网页里面的图片
     for p in range(1, pagenumbers):
         url_later = url[:-5] + "_" + str(p) + ".html"
@@ -116,8 +118,10 @@ def xiurenji_download_single(url):
             picture_numbers += 1
     # 判断下载图片的数量是否与真实的图片数量一致
     if picture_numbers_real == picture_numbers:
-        print("全部{}张图片下载完成!".format(picture_numbers))
-        print("套图《{}》下载完成!".format(s_d))
+        print("全部{}张图片下载完成！".format(picture_numbers))
+        print("套图《{}》下载完成！".format(s_d))
+    else:
+        print("网站显示一共有{}张图片，程序一共下载了{}张图片，套图《{}》可能没有下载完成！".format(picture_numbers_real, picture_numbers, s_d))
     return picture_numbers
 
 
