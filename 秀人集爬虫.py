@@ -17,6 +17,9 @@ UserAgent = [
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; The World)"]
 headers = {"User-Agent": choice(UserAgent)}
 
+def modify_dictionary_name(s):
+    start_index = s.find("[")
+    return s[start_index:]
 
 def xiurenji_download_single(url):
     page_source_text = r.get(url=url, headers=headers)
@@ -28,8 +31,15 @@ def xiurenji_download_single(url):
     pattern = re.compile(pagenumber_moban)
     match = re.findall(pattern, str(soup))
     page_list = []
-    for i in match:
-        page_list.append(i[1:3])
+    if match:
+        for i in match:
+            page_list.append(i[1:3])
+    else:
+        pagenumber_moban = r'>\d</a>'
+        pattern = re.compile(pagenumber_moban)
+        match = re.findall(pattern, str(soup))
+        for i in match:
+            page_list.append(i[1:2])
     pagenumbers = int(max(page_list))
     print("网页共有{}页".format(pagenumbers))
     # 下载第一页的图片
@@ -38,6 +48,7 @@ def xiurenji_download_single(url):
     image_url_base = 'https://www.xiurenji.cc'
     kwd = os.getcwd()
     s_d = l[0].get("alt")
+    s_d = modify_dictionary_name(s_d)
     print("正在下载套图：{}".format(s_d))
     # 创建文件夹
     if not os.path.exists(kwd + '\\' + s_d):
@@ -106,6 +117,7 @@ def xiurenji_download_single(url):
     # 判断下载图片的数量是否与真实的图片数量一致
     if picture_numbers_real == picture_numbers:
         print("全部{}张图片下载完成!".format(picture_numbers))
+        print("套图《{}》下载完成!".format(s_d))
     return picture_numbers
 
 
